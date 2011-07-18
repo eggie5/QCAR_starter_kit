@@ -1,8 +1,3 @@
-#==============================================================================
-#            Copyright (c) 2010-2011 QUALCOMM Incorporated.
-#            All Rights Reserved.
-#            Qualcomm Confidential and Proprietary
-#==============================================================================
 
 
 # Build both ARMv5TE and ARMv7-A machine code.

@@ -19,7 +19,7 @@
 #include "SampleUtils.h"
 #include "Texture.h"
 #include "CubeShaders.h"
-#include "bad_panda.h"
+#include "super_awesome_panda.h"
 
 #ifdef __cplusplus
 extern "C"
@@ -54,15 +54,6 @@ static const float kObjectScale = 130.f;
 static float x_pos=1.0f;
 
 
-JNIEXPORT int JNICALL
-Java_com_qualcomm_QCARSamples_ThreeDee_ThreeDee_getOpenGlEsVersionNative(JNIEnv *, jobject)
-{
-#ifdef USE_OPENGL_ES_1_1        
-    return 1;
-#else
-    return 2;
-#endif
-}
 
 
 JNIEXPORT void JNICALL
@@ -102,8 +93,7 @@ Java_com_qualcomm_QCARSamples_ThreeDee_ThreeDeeRenderer_renderFrame(JNIEnv *, jo
     {
         // Get the trackable:
         const QCAR::Trackable* trackable = state.getActiveTrackable(tIdx);
-        QCAR::Matrix44F modelViewMatrix =
-            QCAR::Tool::convertPose2GLMatrix(trackable->getPose());        
+        QCAR::Matrix44F modelViewMatrix = QCAR::Tool::convertPose2GLMatrix(trackable->getPose());        
 
         // Choose the texture based on the target name:
         int textureIndex = (!strcmp(trackable->getName(), "stones")) ? 0 : 1;
@@ -111,24 +101,26 @@ Java_com_qualcomm_QCARSamples_ThreeDee_ThreeDeeRenderer_renderFrame(JNIEnv *, jo
 
 
 
-        QCAR::Matrix44F modelViewProjection;
 
         SampleUtils::translatePoseMatrix(0.0f, 0.0f, 0.0f,   &modelViewMatrix.data[0]);
         SampleUtils::rotatePoseMatrix(x_pos, 0.0f, 0.0f, 1.0f,  &modelViewMatrix.data[0]);
           //x_pos++;
         
-        SampleUtils::scalePoseMatrix(kObjectScale, kObjectScale, kObjectScale,
-                                     &modelViewMatrix.data[0]);
-        SampleUtils::multiplyMatrix(&projectionMatrix.data[0],
-                                    &modelViewMatrix.data[0] ,
-                                    &modelViewProjection.data[0]);
+        SampleUtils::scalePoseMatrix(kObjectScale, kObjectScale, kObjectScale, &modelViewMatrix.data[0]);
+        
+        //mv + projection matrix
+        QCAR::Matrix44F modelViewProjection;
+                                             
+        SampleUtils::multiplyMatrix(&projectionMatrix.data[0], &modelViewMatrix.data[0] ,  &modelViewProjection.data[0]);
 
         glUseProgram(shaderProgramID);
          
-        //set vars for shader program
-        glVertexAttribPointer(vertexHandle, 3, GL_FLOAT, GL_FALSE, 0, (const GLvoid*) &bad_pandaVerts[0]);
-        glVertexAttribPointer(normalHandle, 3, GL_FLOAT, GL_FALSE, 0, (const GLvoid*) &bad_pandaNormals[0]);
-        glVertexAttribPointer(textureCoordHandle, 2, GL_FLOAT, GL_FALSE, 0, (const GLvoid*) &bad_pandaTexCoords[0]);
+        //set vars in shader program
+        glVertexAttribPointer(vertexHandle, 3, GL_FLOAT, GL_FALSE, 0, (const GLvoid*) &super_awesome_pandaVerts[0]);
+        glVertexAttribPointer(normalHandle, 3, GL_FLOAT, GL_FALSE, 0, (const GLvoid*) &super_awesome_pandaNormals[0]);
+        glVertexAttribPointer(textureCoordHandle, 2, GL_FLOAT, GL_FALSE, 0, (const GLvoid*) &super_awesome_pandaTexCoords[0]);
+        //set modelViewProjectionMatrix var in shader
+        glUniformMatrix4fv(mvpMatrixHandle, 1, GL_FALSE,  (GLfloat*)&modelViewProjection.data[0] );
         
         glEnableVertexAttribArray(vertexHandle);
         glEnableVertexAttribArray(normalHandle);
@@ -136,8 +128,9 @@ Java_com_qualcomm_QCARSamples_ThreeDee_ThreeDeeRenderer_renderFrame(JNIEnv *, jo
         
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, thisTexture->mTextureID);
-        glUniformMatrix4fv(mvpMatrixHandle, 1, GL_FALSE,  (GLfloat*)&modelViewProjection.data[0] );
-        glDrawArrays(GL_TRIANGLES, 0, bad_pandaNumVerts);
+        
+        
+        glDrawArrays(GL_TRIANGLES, 0, super_awesome_pandaNumVerts);
 
         SampleUtils::checkGlError("ThreeDee renderFrame");
 
@@ -169,8 +162,7 @@ configureVideoBackground()
 {
     // Get the default video mode:
     QCAR::CameraDevice& cameraDevice = QCAR::CameraDevice::getInstance();
-    QCAR::VideoMode videoMode = cameraDevice.
-                                getVideoMode(QCAR::CameraDevice::MODE_DEFAULT);
+    QCAR::VideoMode videoMode = cameraDevice.getVideoMode(QCAR::CameraDevice::MODE_DEFAULT);
 
 
     // Configure the video background
@@ -183,8 +175,7 @@ configureVideoBackground()
     if (isActivityInPortraitMode)
     {
         //LOG("configureVideoBackground PORTRAIT");
-        config.mSize.data[0] = videoMode.mHeight
-                                * (screenHeight / (float)videoMode.mWidth);
+        config.mSize.data[0] = videoMode.mHeight* (screenHeight / (float)videoMode.mWidth);
         config.mSize.data[1] = screenHeight;
     }
     else
@@ -381,12 +372,14 @@ Java_com_qualcomm_QCARSamples_ThreeDee_ThreeDeeRenderer_initRendering(   JNIEnv*
     }
 
   
+    //compile shader
     shaderProgramID     = SampleUtils::createProgramFromBuffer(cubeMeshVertexShader,  cubeFragmentShader);
 
+
+    //get ref's to shader variables
     vertexHandle        = glGetAttribLocation(shaderProgramID,   "vertexPosition");
     normalHandle        = glGetAttribLocation(shaderProgramID, "vertexNormal");
     textureCoordHandle  = glGetAttribLocation(shaderProgramID,  "vertexTexCoord");
-    
     mvpMatrixHandle     = glGetUniformLocation(shaderProgramID,    "modelViewProjectionMatrix");
 
 

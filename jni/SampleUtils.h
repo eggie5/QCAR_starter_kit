@@ -1,15 +1,4 @@
-/*==============================================================================
-            Copyright (c) 2010-2011 QUALCOMM Incorporated.
-            All Rights Reserved.
-            Qualcomm Confidential and Proprietary
-            
-@file 
-    SampleUtils.h
 
-@brief
-    A utility class.
-
-==============================================================================*/
 
 
 #ifndef _QCAR_SAMPLEUTILS_H_

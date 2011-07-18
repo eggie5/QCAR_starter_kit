@@ -1,15 +1,4 @@
-/*==============================================================================
-            Copyright (c) 2010-2011 QUALCOMM Incorporated.
-            All Rights Reserved.
-            Qualcomm Confidential and Proprietary
-            
-@file 
-    Texture.cpp
 
-@brief
-    Implementation of class Texture.
-
-==============================================================================*/
 
 // Include files
 #include "Texture.h"

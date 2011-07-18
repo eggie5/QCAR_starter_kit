@@ -1,15 +1,4 @@
-/*==============================================================================
-            Copyright (c) 2010-2011 QUALCOMM Incorporated.
-            All Rights Reserved.
-            Qualcomm Confidential and Proprietary
-            
-@file 
-    CubeShaders.h
 
-@brief
-    Defines OpenGL shaders as char* strings.
-
-==============================================================================*/
 
 #ifndef _QCAR_CUBE_SHADERS_H_
 #define _QCAR_CUBE_SHADERS_H_
@@ -50,6 +39,8 @@ void main() \
    gl_FragColor = texture2D(texSampler2D, texCoord); \
 } \
 ";
+
+//vec4(1.0, 0.0, 0.0, 1.0); red ambient shader (make everything 1 colo)
 
 #endif
 

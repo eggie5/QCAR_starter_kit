@@ -1,15 +1,4 @@
-/*==============================================================================
-            Copyright (c) 2010-2011 QUALCOMM Incorporated.
-            All Rights Reserved.
-            Qualcomm Confidential and Proprietary
-            
-@file 
-    ThreeDee.java
 
-@brief
-    Sample for ThreeDee
-
-==============================================================================*/
 
 
 package com.qualcomm.QCARSamples.ThreeDee;
@@ -251,7 +240,7 @@ public class ThreeDee extends Activity
         loadTextures();
         
         // Query the QCAR initialization flags:
-        mQCARFlags = getInitializationFlags();
+        mQCARFlags = QCAR.GL_20; // OGL 2.0!
         
         // Update the application status to start initializing application
         updateApplicationStatus(APPSTATUS_INIT_APP);
@@ -264,27 +253,11 @@ public class ThreeDee extends Activity
     {
         mTextures.add(Texture.loadTextureFromApk("TextureTeapotBrass.png",  getAssets()));
         //mTextures.add(Texture.loadTextureFromApk("TextureTeapotBlue.png",  getAssets()));
-        mTextures.add(Texture.loadTextureFromApk("bad_panda.png", getAssets()));
+        mTextures.add(Texture.loadTextureFromApk("super_awesome_panda2.png", getAssets()));
     }
     
     
-    /** Configure QCAR with the desired version of OpenGL ES. */
-    private int getInitializationFlags()
-    {
-        int flags = 0;
-        
-        // Query the native code:
-        if (getOpenGlEsVersionNative() == 1)
-        {
-            flags = QCAR.GL_11;
-        }
-        else
-        {
-            flags = QCAR.GL_20;
-        }
-        
-        return flags;
-    }    
+  
     
     
     /** native method for querying the OpenGL ES version.
