@@ -1,6 +1,6 @@
 
 
-package com.eggie5.AR.ARCamera;
+package com.eggie5.AR;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;

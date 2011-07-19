@@ -1,6 +1,6 @@
 
 
-package com.eggie5.AR.ARCamera;
+package com.eggie5.AR;
 
 import com.qualcomm.QCAR.QCAR;
 
