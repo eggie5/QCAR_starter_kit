@@ -1,6 +1,6 @@
 
 
-package com.qualcomm.Tween.ThreeDee;
+package com.eggie5.AR.ARCamera;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -10,8 +10,7 @@ import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
-/** Texture is a support class for the QCAR samples applications.
- * 
+/** 
  *  Exposes functionality for loading a texture from the APK.
  *  
  * */

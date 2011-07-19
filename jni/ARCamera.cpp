@@ -56,14 +56,14 @@ static float x_pos=1.0f;
 
 
 JNIEXPORT void JNICALL
-Java_com_qualcomm_Tween_ThreeDee_ThreeDee_setActivityPortraitMode(JNIEnv *, jobject, jboolean isPortrait)
+Java_com_eggie5_AR_ARCamera_ARCamera_setActivityPortraitMode(JNIEnv *, jobject, jboolean isPortrait)
 {
     is_activity_in_portrait_mode = isPortrait;
 }
 
 
 JNIEXPORT void JNICALL
-Java_com_qualcomm_Tween_ThreeDee_ThreeDee_onQCARInitializedNative(JNIEnv *, jobject)
+Java_com_eggie5_AR_ARCamera_ARCamera_onQCARInitializedNative(JNIEnv *, jobject)
 {
     // Comment in to enable tracking of up to 2 targets simultaneously and
     // split the work over multiple frames:
@@ -73,9 +73,9 @@ Java_com_qualcomm_Tween_ThreeDee_ThreeDee_onQCARInitializedNative(JNIEnv *, jobj
 
 
 JNIEXPORT void JNICALL
-Java_com_qualcomm_Tween_ThreeDee_ThreeDeeRenderer_renderFrame(JNIEnv *, jobject)
+Java_com_eggie5_AR_ARCamera_ARCameraRenderer_renderFrame(JNIEnv *, jobject)
 {
-    //LOG("Java_com_qualcomm_Tween_ThreeDee_GLRenderer_renderFrame");
+    //LOG("Java_com_qualcomm_Tween_ARCamera_GLRenderer_renderFrame");
 
     // Clear color and depth buffer 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -130,7 +130,7 @@ Java_com_qualcomm_Tween_ThreeDee_ThreeDeeRenderer_renderFrame(JNIEnv *, jobject)
         
         glDrawArrays(GL_TRIANGLES, 0, panda_data_NumVerts);
 
-        SampleUtils::checkGlError("ThreeDee renderFrame");
+        SampleUtils::checkGlError("ARCamera renderFrame");
 
 
     }
@@ -149,7 +149,7 @@ Java_com_qualcomm_Tween_ThreeDee_ThreeDeeRenderer_renderFrame(JNIEnv *, jobject)
 
 
 JNIEXPORT void JNICALL
-Java_com_qualcomm_Tween_ThreeDee_ThreeDee_nativeTouch(JNIEnv *, jobject)
+Java_com_eggie5_AR_ARCamera_ARCamera_nativeTouch(JNIEnv *, jobject)
 { 
    x_pos=1;
 }
@@ -190,10 +190,10 @@ configureVideoBackground()
 
 
 JNIEXPORT void JNICALL
-Java_com_qualcomm_Tween_ThreeDee_ThreeDee_initApplicationNative(
+Java_com_eggie5_AR_ARCamera_ARCamera_initApplicationNative(
                             JNIEnv* env, jobject obj, jint width, jint height)
 {
-    LOG("Java_com_qualcomm_Tween_ThreeDee_ThreeDee_initApplicationNative");
+    LOG("Java_com_eggie5_AR_ARCamera_ARCamera_initApplicationNative");
     
     // Store screen dimensions
     screen_width = width;
@@ -220,7 +220,7 @@ Java_com_qualcomm_Tween_ThreeDee_ThreeDee_initApplicationNative(
     textures = new Texture*[texture_count];
 
     jmethodID getTextureMethodID = env->GetMethodID(activityClass,
-        "getTexture", "(I)Lcom/qualcomm/Tween/ThreeDee/Texture;");
+        "getTexture", "(I)Lcom/qualcomm/Tween/ARCamera/Texture;");
 
     if (getTextureMethodID == 0)
     {
@@ -246,10 +246,10 @@ Java_com_qualcomm_Tween_ThreeDee_ThreeDee_initApplicationNative(
 
 
 JNIEXPORT void JNICALL
-Java_com_qualcomm_Tween_ThreeDee_ThreeDee_deinitApplicationNative(
+Java_com_eggie5_AR_ARCamera_ARCamera_deinitApplicationNative(
                                                         JNIEnv* env, jobject obj)
 {
-    LOG("Java_com_qualcomm_Tween_ThreeDee_ThreeDee_deinitApplicationNative");
+    LOG("Java_com_eggie5_AR_ARCamera_ARCamera_deinitApplicationNative");
 
     // Release texture resources
     if (textures != 0)
@@ -269,10 +269,10 @@ Java_com_qualcomm_Tween_ThreeDee_ThreeDee_deinitApplicationNative(
 
 
 JNIEXPORT void JNICALL
-Java_com_qualcomm_Tween_ThreeDee_ThreeDee_startCamera(JNIEnv *,
+Java_com_eggie5_AR_ARCamera_ARCamera_startCamera(JNIEnv *,
                                                                          jobject)
 {
-    LOG("Java_com_qualcomm_Tween_ThreeDee_ThreeDee_startCamera");
+    LOG("Java_com_eggie5_AR_ARCamera_ARCamera_startCamera");
 
     // Initialize the camera:
     if (!QCAR::CameraDevice::getInstance().init())
@@ -304,10 +304,10 @@ Java_com_qualcomm_Tween_ThreeDee_ThreeDee_startCamera(JNIEnv *,
 
 
 JNIEXPORT void JNICALL
-Java_com_qualcomm_Tween_ThreeDee_ThreeDee_stopCamera(JNIEnv *,
+Java_com_eggie5_AR_ARCamera_ARCamera_stopCamera(JNIEnv *,
                                                                    jobject)
 {
-    LOG("Java_com_qualcomm_Tween_ThreeDee_ThreeDee_stopCamera");
+    LOG("Java_com_eggie5_AR_ARCamera_ARCamera_stopCamera");
 
     QCAR::Tracker::getInstance().stop();
 
@@ -316,28 +316,28 @@ Java_com_qualcomm_Tween_ThreeDee_ThreeDee_stopCamera(JNIEnv *,
 }
 
 JNIEXPORT jboolean JNICALL
-Java_com_qualcomm_Tween_ThreeDee_ThreeDee_toggleFlash(JNIEnv*, jobject, jboolean flash)
+Java_com_eggie5_AR_ARCamera_ARCamera_toggleFlash(JNIEnv*, jobject, jboolean flash)
 {
     return QCAR::CameraDevice::getInstance().setFlashTorchMode((flash==JNI_TRUE)) ? JNI_TRUE : JNI_FALSE;
 }
 
 JNIEXPORT jboolean JNICALL
-Java_com_qualcomm_Tween_ThreeDee_ThreeDee_autofocus(JNIEnv*, jobject)
+Java_com_eggie5_AR_ARCamera_ARCamera_autofocus(JNIEnv*, jobject)
 {
     return QCAR::CameraDevice::getInstance().startAutoFocus()?JNI_TRUE:JNI_FALSE;
 }
 
 JNIEXPORT jboolean JNICALL
-Java_com_qualcomm_Tween_ThreeDee_ThreeDee_setFocusMode(JNIEnv*, jobject, jint mode)
+Java_com_eggie5_AR_ARCamera_ARCamera_setFocusMode(JNIEnv*, jobject, jint mode)
 {
     return QCAR::CameraDevice::getInstance().setFocusMode(mode)?JNI_TRUE:JNI_FALSE;
 }
 
 
 JNIEXPORT void JNICALL
-Java_com_qualcomm_Tween_ThreeDee_ThreeDeeRenderer_initRendering(   JNIEnv* env, jobject obj)
+Java_com_eggie5_AR_ARCamera_ARCameraRenderer_initRendering(   JNIEnv* env, jobject obj)
 {
-    LOG("Java_com_qualcomm_Tween_ThreeDee_ThreeDeeRenderer_initRendering");
+    LOG("Java_com_eggie5_AR_ARCamera_ARCameraRenderer_initRendering");
 
     // Define clear color
     glClearColor(0.0f, 0.0f, 0.0f, QCAR::requiresAlpha() ? 0.0f : 1.0f);
@@ -378,10 +378,10 @@ Java_com_qualcomm_Tween_ThreeDee_ThreeDeeRenderer_initRendering(   JNIEnv* env, 
 
 
 JNIEXPORT void JNICALL
-Java_com_qualcomm_Tween_ThreeDee_ThreeDeeRenderer_updateRendering(
+Java_com_eggie5_AR_ARCamera_ARCameraRenderer_updateRendering(
                         JNIEnv* env, jobject obj, jint width, jint height)
 {
-    LOG("Java_com_qualcomm_Tween_ThreeDee_ThreeDeeRenderer_updateRendering");
+    LOG("Java_com_eggie5_AR_ARCamera_ARCameraRenderer_updateRendering");
     
     // Update screen dimensions
     screen_width = width;

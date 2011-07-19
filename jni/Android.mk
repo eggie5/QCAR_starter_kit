@@ -20,7 +20,8 @@ LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
 LOCAL_MODULE := QCAR-prebuilt
-LOCAL_SRC_FILES = ../../../../qcar-sdk-1-0-0/build/lib/$(TARGET_ARCH_ABI)/libQCAR.so
+#TODO: fix this ugly hard coded path!!!
+LOCAL_SRC_FILES = ../../../qcar-sdk-1-0-0/build/lib/$(TARGET_ARCH_ABI)/libQCAR.so
 LOCAL_EXPORT_C_INCLUDES := /Users/eggie5/qcar-sdk-1-0-0/build/include
 include $(PREBUILT_SHARED_LIBRARY)
 
@@ -41,7 +42,7 @@ include $(CLEAR_VARS)
 # prefix and suffix to the corresponding generated file. In other words,
 # a shared library module named 'foo' will generate 'libfoo.so'.
 
-LOCAL_MODULE := ThreeDee
+LOCAL_MODULE := ARCamera
 
 # The TARGET_PLATFORM defines the targetted Android Platform API level
 
@@ -90,7 +91,7 @@ LOCAL_SHARED_LIBRARIES := QCAR-prebuilt
 # compute dependencies automatically for you; just list the source files
 # that will be passed directly to a compiler, and you should be good.
 
-LOCAL_SRC_FILES := ThreeDee.cpp SampleUtils.cpp Texture.cpp
+LOCAL_SRC_FILES := ARCamera.cpp SampleUtils.cpp Texture.cpp
 
 # By default, ARM target binaries will be generated in 'thumb' mode, where
 # each instruction are 16-bit wide. You can define this variable to 'arm'

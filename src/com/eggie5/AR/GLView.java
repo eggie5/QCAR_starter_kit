@@ -1,6 +1,6 @@
 
 
-package com.qualcomm.Tween.ThreeDee;
+package com.eggie5.AR.ARCamera;
 
 import com.qualcomm.QCAR.QCAR;
 
@@ -14,7 +14,7 @@ import android.graphics.PixelFormat;
 import android.opengl.GLSurfaceView;
 
 
-/** QCARSampleGLView is a support class for the QCAR samples applications.
+/** GLView is a support class for the QCAR samples applications.
  * 
  *  Responsible for setting up and configuring the OpenGL surface view.
  *  

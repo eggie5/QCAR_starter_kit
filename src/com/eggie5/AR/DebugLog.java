@@ -1,6 +1,4 @@
-
-
-package com.qualcomm.Tween.ThreeDee;
+package com.eggie5.AR.ARCamera;
 
 import android.util.Log;
 
@@ -12,7 +10,7 @@ import android.util.Log;
 
 public class DebugLog
 {
-    private static final String LOGTAG = "ThreeDee";
+    private static final String LOGTAG = "ARCamera";
 
     /** Logging functions to generate ADB logcat messages. */
 
