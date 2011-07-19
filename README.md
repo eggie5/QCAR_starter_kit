@@ -6,6 +6,8 @@ This is a skeleton android app that has bare-bones android/qualcomm augmented re
 * Ant build script
 * [Screen shot here]
 
+To see a demo video of Qualcomm AR in action: http://eggie5.com/24-qcar-getting-started
+
 
 These instructions are for OS X 10.6.7 and Android API Level 3 (2.1 update 1 Eclair)
 
