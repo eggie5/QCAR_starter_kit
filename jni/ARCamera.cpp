@@ -19,7 +19,7 @@
 #include "SampleUtils.h"
 #include "Texture.h"
 #include "Shaders.h"
-#include "panda_coords.h"
+#include "Obj_lexus.h"
 
 #ifdef __cplusplus
 extern "C"
@@ -49,7 +49,7 @@ bool is_activity_in_portrait_mode   = false;
 QCAR::Matrix44F projection_matrix;
 
 // Constants:
-static const float scale_factor = 500.f;
+static const float scale_factor = 300.f;
 static float x_pos=1.0f;
 
 
@@ -100,8 +100,8 @@ Java_com_eggie5_AR_ARRenderer_renderFrame(JNIEnv *, jobject)
 
 
         SampleUtils::translatePoseMatrix(0.0f, 0.0f, 0.0f,   &model_view_matrix.data[0]);
-        SampleUtils::rotatePoseMatrix(90.f, 1.0f, 0.0f, 0.0f,  &model_view_matrix.data[0]);
-    //    x_pos++;
+        SampleUtils::rotatePoseMatrix(x_pos, 0.0f, 0.0f, 1.0f,  &model_view_matrix.data[0]);
+        x_pos++;
         
         SampleUtils::scalePoseMatrix(scale_factor, scale_factor, scale_factor, &model_view_matrix.data[0]);
         
@@ -113,9 +113,9 @@ Java_com_eggie5_AR_ARRenderer_renderFrame(JNIEnv *, jobject)
         glUseProgram(shader_program_id);
          
         //set vars in shader program
-        glVertexAttribPointer(vertex_handle, 3, GL_FLOAT, GL_FALSE, 0, (const GLvoid*) &panda_data_Verts[0]);
-        glVertexAttribPointer(normal_handle, 3, GL_FLOAT, GL_FALSE, 0, (const GLvoid*) &panda_data_Normals[0]);
-        glVertexAttribPointer(texture_coord_handle, 2, GL_FLOAT, GL_FALSE, 0, (const GLvoid*) &panda_data_TexCoords[0]);
+        glVertexAttribPointer(vertex_handle, 3, GL_FLOAT, GL_FALSE, 0, (const GLvoid*) &Obj_LexusVerts[0]);
+        glVertexAttribPointer(normal_handle, 3, GL_FLOAT, GL_FALSE, 0, (const GLvoid*) &Obj_LexusNormals[0]);
+        glVertexAttribPointer(texture_coord_handle, 2, GL_FLOAT, GL_FALSE, 0, (const GLvoid*) &Obj_LexusTexCoords[0]);
         //set modelViewProjectionMatrix var in shader
         glUniformMatrix4fv(mvp_matrix_handle, 1, GL_FALSE,  (GLfloat*)&modelViewProjection.data[0] );
         
@@ -127,7 +127,7 @@ Java_com_eggie5_AR_ARRenderer_renderFrame(JNIEnv *, jobject)
         glBindTexture(GL_TEXTURE_2D, thisTexture->mTextureID);
         
         
-        glDrawArrays(GL_TRIANGLES, 0, panda_data_NumVerts);
+        glDrawArrays(GL_TRIANGLES, 0, Obj_LexusNumVerts);
 
         SampleUtils::checkGlError("ARCamera renderFrame");
 

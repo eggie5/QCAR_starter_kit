@@ -40,11 +40,7 @@ public class ARCamera extends Activity
 
     // Our OpenGL view:
     private GLView mGlView;
-    
-   
-       
-    
- 
+
     
     // Our renderer:
     private ARRenderer mRenderer;
@@ -243,7 +239,7 @@ public class ARCamera extends Activity
     {
        // mTextures.add(Texture.loadTextureFromApk("TextureTeapotBrass.png",  getAssets()));
         //mTextures.add(Texture.loadTextureFromApk("TextureTeapotBlue.png",  getAssets()));
-        mTextures.add(Texture.loadTextureFromApk("panda_texture.png", getAssets()));
+        mTextures.add(Texture.loadTextureFromApk("lexus_texture.jpg", getAssets()));
     }
     
     
