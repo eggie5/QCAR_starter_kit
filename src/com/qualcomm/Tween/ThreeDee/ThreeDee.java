@@ -1,7 +1,7 @@
 
 
 
-package com.qualcomm.QCARSamples.ThreeDee;
+package com.qualcomm.Tween.ThreeDee;
 
 import java.util.Vector;
 
@@ -25,7 +25,6 @@ import android.view.MotionEvent;
 import com.qualcomm.QCAR.QCAR;
 
 
-/** The main activity for the ThreeDee sample. */
 public class ThreeDee extends Activity
 {
     // Application status constants:
@@ -685,33 +684,24 @@ public class ThreeDee extends Activity
        public boolean onTouchEvent(MotionEvent event)
        {
 
-         
-                  // 
-   
-                  
-                  int action = event.getAction();
-                   switch (action) { 
-                      case (MotionEvent.ACTION_DOWN) : // Touch screen pressed
-                      {
-                  
- 
-                              nativeTouch(); //call native code
-                            
-                                              
-                                               
-                                            
-                         break; 
-                       }
-                      case (MotionEvent.ACTION_UP) : // Touch screen touch ended
-                                            DebugLog.LOGI("ACTION_UP");
-                         break; 
-                      case (MotionEvent.ACTION_MOVE) : // Contact has moved across screen
-                                            DebugLog.LOGI("ACTION_MOVE");
-                         break; 
-                      case (MotionEvent.ACTION_CANCEL) : // Touch event cancelled
-                                            DebugLog.LOGI("ACTION_CANCEL");
-                         break;
-                   } 
-                   return super.onTouchEvent(event);
+          int action = event.getAction();
+           switch (action) { 
+              case (MotionEvent.ACTION_DOWN) : // Touch screen pressed
+              {
+                 DebugLog.LOGI("ACTION_DOWN");
+                 nativeTouch(); //call native code                
+                 break; 
+               }
+              case (MotionEvent.ACTION_UP) : // Touch screen touch ended
+                 DebugLog.LOGI("ACTION_UP");
+                 break; 
+              case (MotionEvent.ACTION_MOVE) : // Contact has moved across screen
+                 DebugLog.LOGI("ACTION_MOVE");
+                 break; 
+              case (MotionEvent.ACTION_CANCEL) : // Touch event cancelled
+                DebugLog.LOGI("ACTION_CANCEL");
+                 break;
+           } 
+           return super.onTouchEvent(event);
        }
 }
