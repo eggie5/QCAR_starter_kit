@@ -1,8 +1,4 @@
-/*==============================================================================
-            Copyright (c) 2010-2011 QUALCOMM Incorporated.
-            All Rights Reserved.
-            Qualcomm Confidential and Proprietary
-==============================================================================*/
+
 
 package com.qualcomm.QCARSamples.ThreeDee;
 
