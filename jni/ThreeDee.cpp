@@ -18,8 +18,8 @@
 
 #include "SampleUtils.h"
 #include "Texture.h"
-#include "CubeShaders.h"
-#include "super_awesome_panda_eye.h"
+#include "Shaders.h"
+#include "panda_coords.h"
 
 #ifdef __cplusplus
 extern "C"
@@ -27,44 +27,43 @@ extern "C"
 #endif
 
 // Textures:
-int textureCount                = 0;
-Texture** textures              = 0;
+int texture_count  = 0;
+Texture** textures  = 0;
 
-// OpenGL ES 2.0 specific:
-#ifdef USE_OPENGL_ES_2_0
-unsigned int shaderProgramID    = 0;
-GLint vertexHandle              = 0;
-GLint normalHandle              = 0;
-GLint textureCoordHandle        = 0;
-GLint mvpMatrixHandle           = 0;
-#endif
+// OpenGL ES 2.0 settings
+unsigned int shader_program_id  = 0;
+GLint vertex_handle              = 0;
+GLint normal_handle              = 0;
+GLint texture_coord_handle        = 0;
+GLint mvp_matrix_handle           = 0;
+
 
 // Screen dimensions:
-unsigned int screenWidth        = 0;
-unsigned int screenHeight       = 0;
+unsigned int screen_width        = 0;
+unsigned int screen_height       = 0;
 
 // Indicates whether screen is in portrait (true) or landscape (false) mode
-bool isActivityInPortraitMode   = false;
+bool is_activity_in_portrait_mode   = false;
 
 // The projection matrix used for rendering virtual objects:
-QCAR::Matrix44F projectionMatrix;
+QCAR::Matrix44F projection_matrix;
 
 // Constants:
-static const float kObjectScale = 500.f;
+static const float scale_factor = 500.f;
 static float x_pos=1.0f;
 
 
 
 
 JNIEXPORT void JNICALL
-Java_com_qualcomm_QCARSamples_ThreeDee_ThreeDee_setActivityPortraitMode(JNIEnv *, jobject, jboolean isPortrait)
+Java_com_qualcomm_Tween_ThreeDee_ThreeDee_setActivityPortraitMode(JNIEnv *, jobject, jboolean isPortrait)
 {
-    isActivityInPortraitMode = isPortrait;
+    is_activity_in_portrait_mode = isPortrait;
 }
 
 
 JNIEXPORT void JNICALL
-Java_com_qualcomm_QCARSamples_ThreeDee_ThreeDee_onQCARInitializedNative(JNIEnv *, jobject)
+Java_com_qualcomm_Tween_ThreeDee_ThreeDee_onQCARInitializedNative(JNIEnv *, jobject)
 {
     // Comment in to enable tracking of up to 2 targets simultaneously and
     // split the work over multiple frames:
@@ -74,9 +73,9 @@ Java_com_qualcomm_QCARSamples_ThreeDee_ThreeDee_onQCARInitializedNative(JNIEnv *
 
 
 JNIEXPORT void JNICALL
-Java_com_qualcomm_QCARSamples_ThreeDee_ThreeDeeRenderer_renderFrame(JNIEnv *, jobject)
+Java_com_qualcomm_Tween_ThreeDee_ThreeDeeRenderer_renderFrame(JNIEnv *, jobject)
 {
-    //LOG("Java_com_qualcomm_QCARSamples_ThreeDee_GLRenderer_renderFrame");
+    //LOG("Java_com_qualcomm_Tween_ThreeDee_GLRenderer_renderFrame");
 
     // Clear color and depth buffer 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -93,44 +92,43 @@ Java_com_qualcomm_QCARSamples_ThreeDee_ThreeDeeRenderer_renderFrame(JNIEnv *, jo
     {
         // Get the trackable:
         const QCAR::Trackable* trackable = state.getActiveTrackable(tIdx);
-        QCAR::Matrix44F modelViewMatrix = QCAR::Tool::convertPose2GLMatrix(trackable->getPose());        
-
-        // Choose the texture based on the target name:
-        int textureIndex =  0;//(!strcmp(trackable->getName(), "stones")) ? 0 : 1;
-        const Texture* const thisTexture = textures[textureIndex];
-
+        QCAR::Matrix44F model_view_matrix = QCAR::Tool::convertPose2GLMatrix(trackable->getPose());        
+        
+        //we only have 1 tex loaded so just choose the first
+        const Texture* const thisTexture = textures[0];
 
 
 
-        SampleUtils::translatePoseMatrix(0.0f, 0.0f, 0.0f,   &modelViewMatrix.data[0]);
-        SampleUtils::rotatePoseMatrix(90.f, 1.0f, 0.0f, 0.0f,  &modelViewMatrix.data[0]);
+
+        SampleUtils::translatePoseMatrix(0.0f, 0.0f, 0.0f,   &model_view_matrix.data[0]);
+        SampleUtils::rotatePoseMatrix(90.f, 1.0f, 0.0f, 0.0f,  &model_view_matrix.data[0]);
     //    x_pos++;
         
-        SampleUtils::scalePoseMatrix(kObjectScale, kObjectScale, kObjectScale, &modelViewMatrix.data[0]);
+        SampleUtils::scalePoseMatrix(scale_factor, scale_factor, scale_factor, &model_view_matrix.data[0]);
         
         //mv + projection matrix
         QCAR::Matrix44F modelViewProjection;
                                              
-        SampleUtils::multiplyMatrix(&projectionMatrix.data[0], &modelViewMatrix.data[0] ,  &modelViewProjection.data[0]);
+        SampleUtils::multiplyMatrix(&projection_matrix.data[0], &model_view_matrix.data[0] ,  &modelViewProjection.data[0]);
 
-        glUseProgram(shaderProgramID);
+        glUseProgram(shader_program_id);
          
         //set vars in shader program
-        glVertexAttribPointer(vertexHandle, 3, GL_FLOAT, GL_FALSE, 0, (const GLvoid*) &super_awesome_panda_eyeVerts[0]);
-        glVertexAttribPointer(normalHandle, 3, GL_FLOAT, GL_FALSE, 0, (const GLvoid*) &super_awesome_panda_eyeNormals[0]);
-        glVertexAttribPointer(textureCoordHandle, 2, GL_FLOAT, GL_FALSE, 0, (const GLvoid*) &super_awesome_panda_eyeTexCoords[0]);
+        glVertexAttribPointer(vertex_handle, 3, GL_FLOAT, GL_FALSE, 0, (const GLvoid*) &panda_data_Verts[0]);
+        glVertexAttribPointer(normal_handle, 3, GL_FLOAT, GL_FALSE, 0, (const GLvoid*) &panda_data_Normals[0]);
+        glVertexAttribPointer(texture_coord_handle, 2, GL_FLOAT, GL_FALSE, 0, (const GLvoid*) &panda_data_TexCoords[0]);
         //set modelViewProjectionMatrix var in shader
-        glUniformMatrix4fv(mvpMatrixHandle, 1, GL_FALSE,  (GLfloat*)&modelViewProjection.data[0] );
+        glUniformMatrix4fv(mvp_matrix_handle, 1, GL_FALSE,  (GLfloat*)&modelViewProjection.data[0] );
         
-        glEnableVertexAttribArray(vertexHandle);
-        glEnableVertexAttribArray(normalHandle);
-        glEnableVertexAttribArray(textureCoordHandle);
+        glEnableVertexAttribArray(vertex_handle);
+        glEnableVertexAttribArray(normal_handle);
+        glEnableVertexAttribArray(texture_coord_handle);
         
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, thisTexture->mTextureID);
         
         
-        glDrawArrays(GL_TRIANGLES, 0, super_awesome_panda_eyeNumVerts);
+        glDrawArrays(GL_TRIANGLES, 0, panda_data_NumVerts);
 
         SampleUtils::checkGlError("ThreeDee renderFrame");
 
@@ -140,9 +138,9 @@ Java_com_qualcomm_QCARSamples_ThreeDee_ThreeDeeRenderer_renderFrame(JNIEnv *, jo
     glDisable(GL_DEPTH_TEST);
 
 
-    glDisableVertexAttribArray(vertexHandle);
-    glDisableVertexAttribArray(normalHandle);
-    glDisableVertexAttribArray(textureCoordHandle);
+    glDisableVertexAttribArray(vertex_handle);
+    glDisableVertexAttribArray(normal_handle);
+    glDisableVertexAttribArray(texture_coord_handle);
 
 
     QCAR::Renderer::getInstance().end();
@@ -151,7 +149,7 @@ Java_com_qualcomm_QCARSamples_ThreeDee_ThreeDeeRenderer_renderFrame(JNIEnv *, jo
 
 
 JNIEXPORT void JNICALL
-Java_com_qualcomm_QCARSamples_ThreeDee_ThreeDee_nativeTouch(JNIEnv *, jobject)
+Java_com_qualcomm_Tween_ThreeDee_ThreeDee_nativeTouch(JNIEnv *, jobject)
 { 
    x_pos=1;
 }
@@ -172,18 +170,18 @@ configureVideoBackground()
     config.mPosition.data[0] = 0.0f;
     config.mPosition.data[1] = 0.0f;
     
-    if (isActivityInPortraitMode)
+    if (is_activity_in_portrait_mode)
     {
         //LOG("configureVideoBackground PORTRAIT");
-        config.mSize.data[0] = videoMode.mHeight* (screenHeight / (float)videoMode.mWidth);
-        config.mSize.data[1] = screenHeight;
+        config.mSize.data[0] = videoMode.mHeight* (screen_height / (float)videoMode.mWidth);
+        config.mSize.data[1] = screen_height;
     }
     else
     {
         //LOG("configureVideoBackground LANDSCAPE");
-        config.mSize.data[0] = screenWidth;
+        config.mSize.data[0] = screen_width;
         config.mSize.data[1] = videoMode.mHeight
-                            * (screenWidth / (float)videoMode.mWidth);
+                            * (screen_width / (float)videoMode.mWidth);
     }
 
     // Set the config:
@@ -192,14 +190,14 @@ configureVideoBackground()
 
 
 JNIEXPORT void JNICALL
-Java_com_qualcomm_QCARSamples_ThreeDee_ThreeDee_initApplicationNative(
+Java_com_qualcomm_Tween_ThreeDee_ThreeDee_initApplicationNative(
                             JNIEnv* env, jobject obj, jint width, jint height)
 {
-    LOG("Java_com_qualcomm_QCARSamples_ThreeDee_ThreeDee_initApplicationNative");
+    LOG("Java_com_qualcomm_Tween_ThreeDee_ThreeDee_initApplicationNative");
     
     // Store screen dimensions
-    screenWidth = width;
-    screenHeight = height;
+    screen_width = width;
+    screen_height = height;
         
     // Handle to the activity class:
     jclass activityClass = env->GetObjectClass(obj);
@@ -212,17 +210,17 @@ Java_com_qualcomm_QCARSamples_ThreeDee_ThreeDee_initApplicationNative(
         return;
     }
 
-    textureCount = env->CallIntMethod(obj, getTextureCountMethodID);    
-    if (!textureCount)
+    texture_count = env->CallIntMethod(obj, getTextureCountMethodID);    
+    if (!texture_count)
     {
         LOG("getTextureCount() returned zero.");
         return;
     }
 
-    textures = new Texture*[textureCount];
+    textures = new Texture*[texture_count];
 
     jmethodID getTextureMethodID = env->GetMethodID(activityClass,
-        "getTexture", "(I)Lcom/qualcomm/QCARSamples/ThreeDee/Texture;");
+        "getTexture", "(I)Lcom/qualcomm/Tween/ThreeDee/Texture;");
 
     if (getTextureMethodID == 0)
     {
@@ -231,7 +229,7 @@ Java_com_qualcomm_QCARSamples_ThreeDee_ThreeDee_initApplicationNative(
     }
 
     // Register the textures
-    for (int i = 0; i < textureCount; ++i)
+    for (int i = 0; i < texture_count; ++i)
     {
         
         //call to get texture in javacode
@@ -248,15 +246,15 @@ Java_com_qualcomm_QCARSamples_ThreeDee_ThreeDee_initApplicationNative(
 
 
 JNIEXPORT void JNICALL
-Java_com_qualcomm_QCARSamples_ThreeDee_ThreeDee_deinitApplicationNative(
+Java_com_qualcomm_Tween_ThreeDee_ThreeDee_deinitApplicationNative(
                                                         JNIEnv* env, jobject obj)
 {
-    LOG("Java_com_qualcomm_QCARSamples_ThreeDee_ThreeDee_deinitApplicationNative");
+    LOG("Java_com_qualcomm_Tween_ThreeDee_ThreeDee_deinitApplicationNative");
 
     // Release texture resources
     if (textures != 0)
     {    
-        for (int i = 0; i < textureCount; ++i)
+        for (int i = 0; i < texture_count; ++i)
         {
             delete textures[i];
             textures[i] = NULL;
@@ -265,16 +263,16 @@ Java_com_qualcomm_QCARSamples_ThreeDee_ThreeDee_deinitApplicationNative(
         delete[]textures;
         textures = NULL;
         
-        textureCount = 0;
+        texture_count = 0;
     }
 }
 
 
 JNIEXPORT void JNICALL
-Java_com_qualcomm_QCARSamples_ThreeDee_ThreeDee_startCamera(JNIEnv *,
+Java_com_qualcomm_Tween_ThreeDee_ThreeDee_startCamera(JNIEnv *,
                                                                          jobject)
 {
-    LOG("Java_com_qualcomm_QCARSamples_ThreeDee_ThreeDee_startCamera");
+    LOG("Java_com_qualcomm_Tween_ThreeDee_ThreeDee_startCamera");
 
     // Initialize the camera:
     if (!QCAR::CameraDevice::getInstance().init())
@@ -292,14 +290,6 @@ Java_com_qualcomm_QCARSamples_ThreeDee_ThreeDee_startCamera(JNIEnv *,
     if (!QCAR::CameraDevice::getInstance().start())
         return;
 
-    // Uncomment to enable flash
-    //if(QCAR::CameraDevice::getInstance().setFlashTorchMode(true))
-    //	LOG("IMAGE TARGETS : enabled torch");
-
-    // Uncomment to enable infinity focus mode, or any other supported focus mode
-    // See CameraDevice.h for supported focus modes
-    //if(QCAR::CameraDevice::getInstance().setFocusMode(QCAR::CameraDevice::FOCUS_MODE_INFINITY))
-    //	LOG("IMAGE TARGETS : enabled infinity focus");
 
     // Start the tracker:
     QCAR::Tracker::getInstance().start();
@@ -308,16 +298,16 @@ Java_com_qualcomm_QCARSamples_ThreeDee_ThreeDee_startCamera(JNIEnv *,
     const QCAR::Tracker& tracker = QCAR::Tracker::getInstance();
     const QCAR::CameraCalibration& cameraCalibration =
                                     tracker.getCameraCalibration();
-    projectionMatrix = QCAR::Tool::getProjectionGL(cameraCalibration, 2.0f,
+    projection_matrix = QCAR::Tool::getProjectionGL(cameraCalibration, 2.0f,
                                             2000.0f);
 }
 
 
 JNIEXPORT void JNICALL
-Java_com_qualcomm_QCARSamples_ThreeDee_ThreeDee_stopCamera(JNIEnv *,
+Java_com_qualcomm_Tween_ThreeDee_ThreeDee_stopCamera(JNIEnv *,
                                                                    jobject)
 {
-    LOG("Java_com_qualcomm_QCARSamples_ThreeDee_ThreeDee_stopCamera");
+    LOG("Java_com_qualcomm_Tween_ThreeDee_ThreeDee_stopCamera");
 
     QCAR::Tracker::getInstance().stop();
 
@@ -326,34 +316,34 @@ Java_com_qualcomm_QCARSamples_ThreeDee_ThreeDee_stopCamera(JNIEnv *,
 }
 
 JNIEXPORT jboolean JNICALL
-Java_com_qualcomm_QCARSamples_ThreeDee_ThreeDee_toggleFlash(JNIEnv*, jobject, jboolean flash)
+Java_com_qualcomm_Tween_ThreeDee_ThreeDee_toggleFlash(JNIEnv*, jobject, jboolean flash)
 {
     return QCAR::CameraDevice::getInstance().setFlashTorchMode((flash==JNI_TRUE)) ? JNI_TRUE : JNI_FALSE;
 }
 
 JNIEXPORT jboolean JNICALL
-Java_com_qualcomm_QCARSamples_ThreeDee_ThreeDee_autofocus(JNIEnv*, jobject)
+Java_com_qualcomm_Tween_ThreeDee_ThreeDee_autofocus(JNIEnv*, jobject)
 {
     return QCAR::CameraDevice::getInstance().startAutoFocus()?JNI_TRUE:JNI_FALSE;
 }
 
 JNIEXPORT jboolean JNICALL
-Java_com_qualcomm_QCARSamples_ThreeDee_ThreeDee_setFocusMode(JNIEnv*, jobject, jint mode)
+Java_com_qualcomm_Tween_ThreeDee_ThreeDee_setFocusMode(JNIEnv*, jobject, jint mode)
 {
     return QCAR::CameraDevice::getInstance().setFocusMode(mode)?JNI_TRUE:JNI_FALSE;
 }
 
 
 JNIEXPORT void JNICALL
-Java_com_qualcomm_QCARSamples_ThreeDee_ThreeDeeRenderer_initRendering(   JNIEnv* env, jobject obj)
+Java_com_qualcomm_Tween_ThreeDee_ThreeDeeRenderer_initRendering(   JNIEnv* env, jobject obj)
 {
-    LOG("Java_com_qualcomm_QCARSamples_ThreeDee_ThreeDeeRenderer_initRendering");
+    LOG("Java_com_qualcomm_Tween_ThreeDee_ThreeDeeRenderer_initRendering");
 
     // Define clear color
     glClearColor(0.0f, 0.0f, 0.0f, QCAR::requiresAlpha() ? 0.0f : 1.0f);
     
     // Now generate the OpenGL texture objects and add settings
-    for (int i = 0; i < textureCount; ++i)
+    for (int i = 0; i < texture_count; ++i)
     {
         //get id for texture
         glGenTextures(1, &(textures[i]->mTextureID));
@@ -373,14 +363,14 @@ Java_com_qualcomm_QCARSamples_ThreeDee_ThreeDeeRenderer_initRendering(   JNIEnv*
 
   
     //compile shader
-    shaderProgramID     = SampleUtils::createProgramFromBuffer(cubeMeshVertexShader,  cubeFragmentShader);
+    shader_program_id     = SampleUtils::createProgramFromBuffer(vertex_shader_literal,  fragment_shader_literal);
 
 
-    //get ref's to shader variables
-    vertexHandle        = glGetAttribLocation(shaderProgramID,   "vertexPosition");
-    normalHandle        = glGetAttribLocation(shaderProgramID, "vertexNormal");
-    textureCoordHandle  = glGetAttribLocation(shaderProgramID,  "vertexTexCoord");
-    mvpMatrixHandle     = glGetUniformLocation(shaderProgramID,    "modelViewProjectionMatrix");
+    //get ref's to shader variables - set them in render function
+    vertex_handle        = glGetAttribLocation(shader_program_id,   "vertexPosition");
+    normal_handle        = glGetAttribLocation(shader_program_id, "vertexNormal");
+    texture_coord_handle  = glGetAttribLocation(shader_program_id,  "vertexTexCoord");
+    mvp_matrix_handle     = glGetUniformLocation(shader_program_id,    "modelViewProjectionMatrix");
 
 
 
@@ -388,14 +378,14 @@ Java_com_qualcomm_QCARSamples_ThreeDee_ThreeDeeRenderer_initRendering(   JNIEnv*
 
 
 JNIEXPORT void JNICALL
-Java_com_qualcomm_QCARSamples_ThreeDee_ThreeDeeRenderer_updateRendering(
+Java_com_qualcomm_Tween_ThreeDee_ThreeDeeRenderer_updateRendering(
                         JNIEnv* env, jobject obj, jint width, jint height)
 {
-    LOG("Java_com_qualcomm_QCARSamples_ThreeDee_ThreeDeeRenderer_updateRendering");
+    LOG("Java_com_qualcomm_Tween_ThreeDee_ThreeDeeRenderer_updateRendering");
     
     // Update screen dimensions
-    screenWidth = width;
-    screenHeight = height;
+    screen_width = width;
+    screen_height = height;
 
     // Reconfigure the video background
     configureVideoBackground();

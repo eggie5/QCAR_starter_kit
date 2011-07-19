@@ -252,7 +252,7 @@ public class ThreeDee extends Activity
     {
        // mTextures.add(Texture.loadTextureFromApk("TextureTeapotBrass.png",  getAssets()));
         //mTextures.add(Texture.loadTextureFromApk("TextureTeapotBlue.png",  getAssets()));
-        mTextures.add(Texture.loadTextureFromApk("super_awesome_panda_eye.png", getAssets()));
+        mTextures.add(Texture.loadTextureFromApk("panda_texture.png", getAssets()));
     }
     
     
