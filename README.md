@@ -12,6 +12,7 @@ These instructions are for OS X 10.6.7 and Android API Level 3 (2.1 update 1 Ecl
 
 
 To install:
+
 * Install Qualcomm AR SDK: http://ar.qualcomm.com
 * clone project to your local dir
 * Update jni/Android.mk line 24 to point to your QCAR SDK install path
