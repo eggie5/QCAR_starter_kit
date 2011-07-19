@@ -251,9 +251,9 @@ public class ThreeDee extends Activity
     use for rendering. */
     private void loadTextures()
     {
-        mTextures.add(Texture.loadTextureFromApk("TextureTeapotBrass.png",  getAssets()));
+       // mTextures.add(Texture.loadTextureFromApk("TextureTeapotBrass.png",  getAssets()));
         //mTextures.add(Texture.loadTextureFromApk("TextureTeapotBlue.png",  getAssets()));
-        mTextures.add(Texture.loadTextureFromApk("super_awesome_panda2.png", getAssets()));
+        mTextures.add(Texture.loadTextureFromApk("super_awesome_panda_eye.png", getAssets()));
     }
     
     

@@ -19,7 +19,7 @@
 #include "SampleUtils.h"
 #include "Texture.h"
 #include "CubeShaders.h"
-#include "super_awesome_panda.h"
+#include "super_awesome_panda_eye.h"
 
 #ifdef __cplusplus
 extern "C"
@@ -50,7 +50,7 @@ bool isActivityInPortraitMode   = false;
 QCAR::Matrix44F projectionMatrix;
 
 // Constants:
-static const float kObjectScale = 130.f;
+static const float kObjectScale = 500.f;
 static float x_pos=1.0f;
 
 
@@ -96,15 +96,15 @@ Java_com_qualcomm_QCARSamples_ThreeDee_ThreeDeeRenderer_renderFrame(JNIEnv *, jo
         QCAR::Matrix44F modelViewMatrix = QCAR::Tool::convertPose2GLMatrix(trackable->getPose());        
 
         // Choose the texture based on the target name:
-        int textureIndex = (!strcmp(trackable->getName(), "stones")) ? 0 : 1;
+        int textureIndex =  0;//(!strcmp(trackable->getName(), "stones")) ? 0 : 1;
         const Texture* const thisTexture = textures[textureIndex];
 
 
 
 
         SampleUtils::translatePoseMatrix(0.0f, 0.0f, 0.0f,   &modelViewMatrix.data[0]);
-        SampleUtils::rotatePoseMatrix(x_pos, 0.0f, 0.0f, 1.0f,  &modelViewMatrix.data[0]);
-          //x_pos++;
+        SampleUtils::rotatePoseMatrix(90.f, 1.0f, 0.0f, 0.0f,  &modelViewMatrix.data[0]);
+    //    x_pos++;
         
         SampleUtils::scalePoseMatrix(kObjectScale, kObjectScale, kObjectScale, &modelViewMatrix.data[0]);
         
@@ -116,9 +116,9 @@ Java_com_qualcomm_QCARSamples_ThreeDee_ThreeDeeRenderer_renderFrame(JNIEnv *, jo
         glUseProgram(shaderProgramID);
          
         //set vars in shader program
-        glVertexAttribPointer(vertexHandle, 3, GL_FLOAT, GL_FALSE, 0, (const GLvoid*) &super_awesome_pandaVerts[0]);
-        glVertexAttribPointer(normalHandle, 3, GL_FLOAT, GL_FALSE, 0, (const GLvoid*) &super_awesome_pandaNormals[0]);
-        glVertexAttribPointer(textureCoordHandle, 2, GL_FLOAT, GL_FALSE, 0, (const GLvoid*) &super_awesome_pandaTexCoords[0]);
+        glVertexAttribPointer(vertexHandle, 3, GL_FLOAT, GL_FALSE, 0, (const GLvoid*) &super_awesome_panda_eyeVerts[0]);
+        glVertexAttribPointer(normalHandle, 3, GL_FLOAT, GL_FALSE, 0, (const GLvoid*) &super_awesome_panda_eyeNormals[0]);
+        glVertexAttribPointer(textureCoordHandle, 2, GL_FLOAT, GL_FALSE, 0, (const GLvoid*) &super_awesome_panda_eyeTexCoords[0]);
         //set modelViewProjectionMatrix var in shader
         glUniformMatrix4fv(mvpMatrixHandle, 1, GL_FALSE,  (GLfloat*)&modelViewProjection.data[0] );
         
@@ -130,7 +130,7 @@ Java_com_qualcomm_QCARSamples_ThreeDee_ThreeDeeRenderer_renderFrame(JNIEnv *, jo
         glBindTexture(GL_TEXTURE_2D, thisTexture->mTextureID);
         
         
-        glDrawArrays(GL_TRIANGLES, 0, super_awesome_pandaNumVerts);
+        glDrawArrays(GL_TRIANGLES, 0, super_awesome_panda_eyeNumVerts);
 
         SampleUtils::checkGlError("ThreeDee renderFrame");
 
