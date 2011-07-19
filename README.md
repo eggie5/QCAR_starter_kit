@@ -18,6 +18,7 @@ To install:
 * Install Qualcomm AR SDK: http://ar.qualcomm.com
 * clone project to your local dir
 * Update jni/Android.mk line 24 to point to your QCAR SDK install path
+* Copy the QCAR.jar from the QCAR SDK dir to the libs dir
 * Choose some image and go to ar.qualcomm.com and create a target 
 * Get the xml and .dat file from previous step and put in assets dir
 
