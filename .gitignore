@@ -15,4 +15,4 @@ gen
 *.jar
 .classpath
 obj
-lib
+libs
