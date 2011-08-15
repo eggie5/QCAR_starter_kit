@@ -16,7 +16,7 @@ LOCAL_PATH := $(call my-dir)
 # into the appropriate folder (libs/armeabi and libs/armeabi-v7a respectively)
 # and setting the include path for library-specific header files
 
-
+#testing github ace editor!
 
 include $(CLEAR_VARS)
 LOCAL_MODULE := QCAR-prebuilt
@@ -67,7 +67,7 @@ endif
 # C ***AND*** C++ source files.
 #
 # NOTE: flag "-Wno-write-strings" removes warning about deprecated conversion
-#       from string constant to ‘char*’
+#       from string constant to ï¿½char*ï¿½
 
 LOCAL_CFLAGS := -Wno-write-strings $(OPENGLES_DEF)
 
