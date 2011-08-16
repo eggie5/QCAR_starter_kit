@@ -51,6 +51,7 @@ QCAR::Matrix44F projection_matrix;
 // Constants:
 static const float scale_factor = 300.f;
 static float x_pos=1.0f;
+static int lastTrackableId=-1;
 
 
 
@@ -72,32 +73,45 @@ Java_com_eggie5_AR_ARCamera_onQCARInitializedNative(JNIEnv *, jobject)
 
 
 JNIEXPORT void JNICALL
-Java_com_eggie5_AR_ARRenderer_renderFrame(JNIEnv *, jobject)
+Java_com_eggie5_AR_ARRenderer_renderFrame(JNIEnv * env, jobject obj)
 {
-    //LOG("Java_com_qualcomm_Tween_ARCamera_GLRenderer_renderFrame");
-
     // Clear color and depth buffer 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // Render video background:
     QCAR::State state = QCAR::Renderer::getInstance().begin();
-        
-
-    glEnable(GL_DEPTH_TEST);
+    
+  	glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
+
+	jclass javaClass = env->GetObjectClass(obj);
+	jmethodID method = env->GetMethodID(javaClass, "displayMessage", "(Ljava/lang/String;)V");
+	
+	if(state.getNumActiveTrackables()<1 &&  lastTrackableId!=-1)
+	{
+		jstring js = env->NewStringUTF("");
+		env->CallVoidMethod(obj, method, js);
+		lastTrackableId  =-1;
+	}
+
+  
 
     // Did we find any trackables this frame?
     for(int tIdx = 0; tIdx < state.getNumActiveTrackables(); tIdx++)
     {
         // Get the trackable:
         const QCAR::Trackable* trackable = state.getActiveTrackable(tIdx);
+		
+        if (trackable->getId() != lastTrackableId) 
+		{    
+				jstring js = env->NewStringUTF(trackable->getName());
+				env->CallVoidMethod(obj, method, js);
+				lastTrackableId = trackable->getId();
+		}
         QCAR::Matrix44F model_view_matrix = QCAR::Tool::convertPose2GLMatrix(trackable->getPose());        
         
         //we only have 1 tex loaded so just choose the first
         const Texture* const thisTexture = textures[0];
-
-
-
 
         SampleUtils::translatePoseMatrix(0.0f, 0.0f, 0.0f,   &model_view_matrix.data[0]);
         SampleUtils::rotatePoseMatrix(x_pos, 0.0f, 0.0f, 1.0f,  &model_view_matrix.data[0]);

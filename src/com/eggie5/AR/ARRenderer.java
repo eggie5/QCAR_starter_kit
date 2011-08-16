@@ -7,11 +7,19 @@ import android.opengl.GLSurfaceView;
 
 import com.qualcomm.QCAR.QCAR;
 
+import android.os.Message;
+import android.content.Context;
+import android.os.Handler;
+
 
 /** The renderer class for the ARCamera sample. */
 public class ARRenderer implements GLSurfaceView.Renderer
 {
+	// FPS counter.
+   private int mFrameCount = 0;
+   private long mStartTime = System.nanoTime();
     public boolean mIsActive = false;
+
     
     /** Native function for initializing the renderer. */
     public native void initRendering();
@@ -51,6 +59,17 @@ public class ARRenderer implements GLSurfaceView.Renderer
     /** The native render function. */    
     public native void renderFrame();
     
+	// A handler object for sending messages to the main activity thread
+    public static Handler mainActivityHandler;
+
+    // Called from native to display a message
+    public void displayMessage(String text)
+    {
+        // We use a handler because this thread cannot change the UI
+    	Message message = new Message();
+    	message.obj = text;
+        mainActivityHandler.sendMessage(message);
+    }
     
     /** Called to draw the current frame. */
     public void onDrawFrame(GL10 gl)
@@ -59,6 +78,17 @@ public class ARRenderer implements GLSurfaceView.Renderer
             return;
 
         // Call our native function to render content
-        renderFrame();
+         renderFrame();
+
+	 ++mFrameCount;
+	      if (mFrameCount % 50 == 0) {
+	          long now = System.nanoTime();
+	          double elapsedS = (now - mStartTime) / 1.0e9;
+	          double msPerFrame = (1000 * elapsedS / mFrameCount);
+	          DebugLog.LOGD("ms / frame: " + msPerFrame + " - fps: " + (1000 / msPerFrame));
+
+	          mFrameCount = 0;
+	          mStartTime = now;
+	      }
     }
 }

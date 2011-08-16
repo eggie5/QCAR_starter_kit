@@ -18,6 +18,9 @@ import android.view.WindowManager;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
 import android.view.MotionEvent;
+import android.widget.Toast;
+import android.os.Message;
+import android.content.Context;
 
 import com.qualcomm.QCAR.QCAR;
 
@@ -280,6 +283,23 @@ public class ARCamera extends Activity
             mGlView.setVisibility(View.VISIBLE);
             mGlView.onResume();
         }        
+
+		// Create a new handler for the renderer thread to use
+		// This is necessary as only the main thread can make changes to the UI
+		ARRenderer.mainActivityHandler = new Handler() {
+		    @Override
+		    public void handleMessage(Message msg) 
+			{
+				String text = (String) msg.obj;
+				if(!text.equals(""))
+				{
+			    	Context context = getApplicationContext();
+			    	int duration = 1;
+			    	Toast toast = Toast.makeText(context, text, duration);
+					toast.show();
+				}
+		    }
+		};
     }
     
 
