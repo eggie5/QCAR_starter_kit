@@ -21,8 +21,8 @@ LOCAL_PATH := $(call my-dir)
 include $(CLEAR_VARS)
 LOCAL_MODULE := QCAR-prebuilt
 #TODO: fix this ugly hard coded path!!!
-LOCAL_SRC_FILES = ../../../qcar-sdk-1-0-0/build/lib/$(TARGET_ARCH_ABI)/libQCAR.so
-LOCAL_EXPORT_C_INCLUDES := /Users/eggie5/qcar-sdk-1-0-0/build/include
+LOCAL_SRC_FILES = ../../qcar-sdk-1-0-0/build/lib/$(TARGET_ARCH_ABI)/libQCAR.so
+LOCAL_EXPORT_C_INCLUDES := /Users/eggie5/Development/qcar-sdk-1-0-0/build/include
 include $(PREBUILT_SHARED_LIBRARY)
 
 #-----------------------------------------------------------------------------

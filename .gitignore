@@ -12,7 +12,13 @@ Desktop.ini
 *.apk
 bin
 gen
-*.jar
 .classpath
 obj
-libs
+assets/config.xml
+assets/qcar-resources.dat
+libs/QCAR.jar
+/libs/armeabi
+/libs/armeabi-v7a
+local.properties
+proguard.cfg
+
