@@ -52,6 +52,7 @@ QCAR::Matrix44F projection_matrix;
 static const float scale_factor = 300.f;
 static float x_pos=1.0f;
 static int lastTrackableId=-1;
+unsigned int vbo[2];
 
 
 
@@ -83,6 +84,7 @@ Java_com_eggie5_AR_ARRenderer_renderFrame(JNIEnv * env, jobject obj)
     
   	glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
+
 
 	jclass javaClass = env->GetObjectClass(obj);
 	jmethodID method = env->GetMethodID(javaClass, "displayMessage", "(Ljava/lang/String;)V");
@@ -127,9 +129,17 @@ Java_com_eggie5_AR_ARRenderer_renderFrame(JNIEnv * env, jobject obj)
         glUseProgram(shader_program_id);
          
         //set vars in shader program
-        glVertexAttribPointer(vertex_handle, 3, GL_FLOAT, GL_FALSE, 0, (const GLvoid*) &Obj_LexusVerts[0]);
+       // glVertexAttribPointer(vertex_handle, 3, GL_FLOAT, GL_FALSE, 0, (const GLvoid*) &Obj_LexusVerts[0]);
+		//VBO
+		glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
+		glVertexAttribPointer(vertex_handle, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
         glVertexAttribPointer(normal_handle, 3, GL_FLOAT, GL_FALSE, 0, (const GLvoid*) &Obj_LexusNormals[0]);
-        glVertexAttribPointer(texture_coord_handle, 2, GL_FLOAT, GL_FALSE, 0, (const GLvoid*) &Obj_LexusTexCoords[0]);
+        
+		//glVertexAttribPointer(texture_coord_handle, 2, GL_FLOAT, GL_FALSE, 0, (const GLvoid*) &Obj_LexusTexCoords[0]);
+		glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
+		glVertexAttribPointer(texture_coord_handle, 2, GL_FLOAT, GL_FALSE, 0, 0);
+		
         //set modelViewProjectionMatrix var in shader
         glUniformMatrix4fv(mvp_matrix_handle, 1, GL_FALSE,  (GLfloat*)&modelViewProjection.data[0] );
         
@@ -347,13 +357,38 @@ Java_com_eggie5_AR_ARCamera_setFocusMode(JNIEnv*, jobject, jint mode)
 }
 
 
+
 JNIEXPORT void JNICALL
 Java_com_eggie5_AR_ARRenderer_initRendering(   JNIEnv* env, jobject obj)
 {
     LOG("Java_com_eggie5_AR_ARRenderer_initRendering");
 
+	LOG("******************************");
+	LOG("GL_VENDOR: %s", glGetString(GL_VENDOR));
+	LOG("GL_RENDERER: %s", glGetString(GL_RENDERER));
+	LOG("GL_VERSION: %s", glGetString(GL_VERSION));
+	LOG("GL_SHADING_LANGUAGE_VERSION: %s", glGetString(GL_SHADING_LANGUAGE_VERSION));
+	LOG("GL_EXTENSIONS: %s", glGetString(GL_EXTENSIONS));
+LOG("**************************_____");
+
     // Define clear color
     glClearColor(0.0f, 0.0f, 0.0f, QCAR::requiresAlpha() ? 0.0f : 1.0f);
+
+	//VBO setup
+	glGenBuffers(2, vbo);
+	
+    glBindBuffer (GL_ARRAY_BUFFER, vbo[0]);
+	//size of arry * 4 (bytes in a float)
+    glBufferData (GL_ARRAY_BUFFER, (3*Obj_LexusNumVerts)*4, Obj_LexusVerts, GL_STATIC_DRAW);
+
+	glBindBuffer (GL_ARRAY_BUFFER, vbo[1]);
+	//size of arry * 4 (bytes in a float)
+    glBufferData (GL_ARRAY_BUFFER, (2*Obj_LexusNumVerts)*4, Obj_LexusTexCoords, GL_STATIC_DRAW);
+    // glBindBuffer (GL_ELEMENT_ARRAY_BUFFER, vbo[1]);
+    //     glBufferData (GL_ELEMENT_ARRAY_BUFFER, 2*4, indices, GL_STATIC_DRAW);
+
+	// delete Obj_LexusVerts; Obj_LexusVerts=NULL;
+	// delete Obj_LexusTexCoords; Obj_LexusTexCoords=NULL;
     
     // Now generate the OpenGL texture objects and add settings
     for (int i = 0; i < texture_count; ++i)
