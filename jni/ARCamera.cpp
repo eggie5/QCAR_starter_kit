@@ -129,16 +129,16 @@ Java_com_eggie5_AR_ARRenderer_renderFrame(JNIEnv * env, jobject obj)
         glUseProgram(shader_program_id);
          
         //set vars in shader program
-       // glVertexAttribPointer(vertex_handle, 3, GL_FLOAT, GL_FALSE, 0, (const GLvoid*) &Obj_LexusVerts[0]);
+       glVertexAttribPointer(vertex_handle, 3, GL_FLOAT, GL_FALSE, 0, (const GLvoid*) &Obj_LexusVerts[0]);
 		//VBO
-		glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
-		glVertexAttribPointer(vertex_handle, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	//	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
+	//	glVertexAttribPointer(vertex_handle, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
         glVertexAttribPointer(normal_handle, 3, GL_FLOAT, GL_FALSE, 0, (const GLvoid*) &Obj_LexusNormals[0]);
         
-		//glVertexAttribPointer(texture_coord_handle, 2, GL_FLOAT, GL_FALSE, 0, (const GLvoid*) &Obj_LexusTexCoords[0]);
-		glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
-		glVertexAttribPointer(texture_coord_handle, 2, GL_FLOAT, GL_FALSE, 0, 0);
+	glVertexAttribPointer(texture_coord_handle, 2, GL_FLOAT, GL_FALSE, 0, (const GLvoid*) &Obj_LexusTexCoords[0]);
+	//	glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
+	//	glVertexAttribPointer(texture_coord_handle, 2, GL_FLOAT, GL_FALSE, 0, 0);
 		
         //set modelViewProjectionMatrix var in shader
         glUniformMatrix4fv(mvp_matrix_handle, 1, GL_FALSE,  (GLfloat*)&modelViewProjection.data[0] );
@@ -183,7 +183,10 @@ configureVideoBackground()
 {
     // Get the default video mode:
     QCAR::CameraDevice& cameraDevice = QCAR::CameraDevice::getInstance();
-    QCAR::VideoMode videoMode = cameraDevice.getVideoMode(QCAR::CameraDevice::MODE_DEFAULT);
+    QCAR::VideoMode videoMode = cameraDevice.getVideoMode(QCAR::CameraDevice::MODE_OPTIMIZE_SPEED);
+
+	//cameraDevice.selectVideoMode(QCAR::CameraDevice::MODE_OPTIMIZE_SPEED);
+	//QCAR::CameraDevice::getInstance().selectVideoMode(QCAR::CameraDevice::MODE_OPTIMIZE_SPEED);
 
 
     // Configure the video background
@@ -306,7 +309,7 @@ Java_com_eggie5_AR_ARCamera_startCamera(JNIEnv *,
 
     // Select the default mode:
     if (!QCAR::CameraDevice::getInstance().selectVideoMode(
-                                QCAR::CameraDevice::MODE_DEFAULT))
+                                QCAR::CameraDevice::MODE_OPTIMIZE_SPEED))
         return;
 
     // Start the camera:
@@ -387,8 +390,8 @@ LOG("**************************_____");
     // glBindBuffer (GL_ELEMENT_ARRAY_BUFFER, vbo[1]);
     //     glBufferData (GL_ELEMENT_ARRAY_BUFFER, 2*4, indices, GL_STATIC_DRAW);
 
-	// delete Obj_LexusVerts; Obj_LexusVerts=NULL;
-	// delete Obj_LexusTexCoords; Obj_LexusTexCoords=NULL;
+	// delete[]Obj_LexusVerts;
+	// delete[]Obj_LexusTexCoords;
     
     // Now generate the OpenGL texture objects and add settings
     for (int i = 0; i < texture_count; ++i)

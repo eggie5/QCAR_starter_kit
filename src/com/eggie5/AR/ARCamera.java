@@ -21,6 +21,9 @@ import android.view.MotionEvent;
 import android.widget.Toast;
 import android.os.Message;
 import android.content.Context;
+import	android.view.Display;
+import android.view.WindowManager;
+
 
 import com.qualcomm.QCAR.QCAR;
 
@@ -223,7 +226,12 @@ public class ARCamera extends Activity
         DebugLog.LOGD("ARCamera::onCreate");
         super.onCreate(savedInstanceState);
         
-        
+       // WindowManager windowManager = (WindowManager) getContext().getSystemService(WINDOW_SERVICE);
+		 Display display = getWindowManager().getDefaultDisplay();
+		 
+		
+		DebugLog.LOGD(Float.toString(display.getRefreshRate()));
+		
         // Load any sample specific textures:  
         mTextures = new Vector<Texture>();
         loadTextures();
