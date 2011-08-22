@@ -129,16 +129,16 @@ Java_com_eggie5_AR_ARRenderer_renderFrame(JNIEnv * env, jobject obj)
         glUseProgram(shader_program_id);
          
         //set vars in shader program
-       glVertexAttribPointer(vertex_handle, 3, GL_FLOAT, GL_FALSE, 0, (const GLvoid*) &Obj_LexusVerts[0]);
+      // glVertexAttribPointer(vertex_handle, 3, GL_FLOAT, GL_FALSE, 0, (const GLvoid*) &Obj_LexusVerts[0]);
 		//VBO
-	//	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
-	//	glVertexAttribPointer(vertex_handle, 3, GL_FLOAT, GL_FALSE, 0, 0);
+		glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
+		glVertexAttribPointer(vertex_handle, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
         glVertexAttribPointer(normal_handle, 3, GL_FLOAT, GL_FALSE, 0, (const GLvoid*) &Obj_LexusNormals[0]);
         
-	glVertexAttribPointer(texture_coord_handle, 2, GL_FLOAT, GL_FALSE, 0, (const GLvoid*) &Obj_LexusTexCoords[0]);
-	//	glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
-	//	glVertexAttribPointer(texture_coord_handle, 2, GL_FLOAT, GL_FALSE, 0, 0);
+	//glVertexAttribPointer(texture_coord_handle, 2, GL_FLOAT, GL_FALSE, 0, (const GLvoid*) &Obj_LexusTexCoords[0]);
+		glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
+		glVertexAttribPointer(texture_coord_handle, 2, GL_FLOAT, GL_FALSE, 0, 0);
 		
         //set modelViewProjectionMatrix var in shader
         glUniformMatrix4fv(mvp_matrix_handle, 1, GL_FALSE,  (GLfloat*)&modelViewProjection.data[0] );
@@ -390,8 +390,8 @@ LOG("**************************_____");
     // glBindBuffer (GL_ELEMENT_ARRAY_BUFFER, vbo[1]);
     //     glBufferData (GL_ELEMENT_ARRAY_BUFFER, 2*4, indices, GL_STATIC_DRAW);
 
-	// delete[]Obj_LexusVerts;
-	// delete[]Obj_LexusTexCoords;
+	// delete Obj_LexusVerts;
+	// 	 delete Obj_LexusTexCoords;
     
     // Now generate the OpenGL texture objects and add settings
     for (int i = 0; i < texture_count; ++i)
