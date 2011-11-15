@@ -1,9 +1,11 @@
-This is a skeleton android app that has bare-bones android/qualcomm augmented reality setup and ready to run. Think of it as scaffolding with:
+This is a skeleton android app that has bare-bones android/qualcomm augmented reality setup and ready to run. 
+Think of it as scaffolding with:
 
 * Android NDK
 * OpenGL ES 2.0
 * Qualcomm Augmented Reality 2.0 (w/ built in 3D model)
 * Ant build script
+* Simple game engine features (coming soon)
 * [Screen shot here]
 
 To see a demo video of Qualcomm AR in action: http://eggie5.com/24-qcar-getting-started
