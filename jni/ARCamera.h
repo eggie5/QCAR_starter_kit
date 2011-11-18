@@ -19,11 +19,17 @@
 #include "SampleUtils.h"
 #include "Texture.h"
 #include "Shaders.h"
+#include "Model.h"
+#include "SampleMath.h"
 
 
 //model ref
 extern float** Obj_LexusNormals;
 extern unsigned int Obj_LexusNumVerts;
+
+// Models:
+extern int model_count;
+extern Model** models;
 
 // Textures:
 extern int texture_count;
@@ -48,6 +54,7 @@ extern unsigned int screen_height;
 
 // The projection matrix used for rendering virtual objects:
 extern QCAR::Matrix44F projection_matrix;
+QCAR::Matrix44F model_view_matrix;
 
 // Constants:
 static const float scale_factor = 300.f;

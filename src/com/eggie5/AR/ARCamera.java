@@ -67,6 +67,8 @@ public class ARCamera extends Activity
     
     // The textures we will use for rendering:
     private Vector<Texture> mTextures;
+
+	private Vector<Model> mModels;
   
     
     /** Static initializer block to load native libraries on start-up. */
@@ -235,6 +237,11 @@ public class ARCamera extends Activity
         // Load any sample specific textures:  
         mTextures = new Vector<Texture>();
         loadTextures();
+
+		mModels = new Vector<Model>();
+		loadModels();
+
+		
         
         // Query the QCAR initialization flags:
         mQCARFlags = QCAR.GL_20; // OGL 2.0!
@@ -251,6 +258,11 @@ public class ARCamera extends Activity
        // mTextures.add(Texture.loadTextureFromApk("TextureTeapotBrass.png",  getAssets()));
         //mTextures.add(Texture.loadTextureFromApk("TextureTeapotBlue.png",  getAssets()));
         mTextures.add(Texture.loadTextureFromApk("lexus_texture.jpg", getAssets()));
+    }
+
+    private void loadModels()
+    {
+        mModels.add(Model.loadModelFromApk("panda_model.json.png", getAssets()));
     }
     
     
@@ -628,6 +640,9 @@ public class ARCamera extends Activity
     private native boolean autofocus();
     private native boolean setFocusMode(int mode);
     
+
+	//eventually remove these get texture elements
+	//and move texture into Model object
     /** Returns the number of registered textures. */
     public int getTextureCount()
     {
@@ -639,6 +654,19 @@ public class ARCamera extends Activity
     public Texture getTexture(int i)
     {
         return mTextures.elementAt(i);
+    }
+
+    /** Returns the number of registered textures. */
+    public int getModelCount()
+    {
+        return mModels.size();
+    }
+
+    
+    /** Returns the model object at the specified index. */
+    public Model getModel(int i)
+    {
+        return mModels.elementAt(i);
     }
 
     

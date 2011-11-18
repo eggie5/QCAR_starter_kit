@@ -1,8 +1,3 @@
-#==============================================================================
-#            Copyright (c) 2010-2011 QUALCOMM Incorporated.
-#            All Rights Reserved.
-#            Qualcomm Confidential and Proprietary
-#==============================================================================
 
 
 # An Android.mk file must begin with the definition of the LOCAL_PATH
@@ -91,7 +86,7 @@ LOCAL_SHARED_LIBRARIES := QCAR-prebuilt
 # compute dependencies automatically for you; just list the source files
 # that will be passed directly to a compiler, and you should be good.
 
-LOCAL_SRC_FILES := ARCamera.cpp QCARBase.cpp SampleUtils.cpp Texture.cpp
+LOCAL_SRC_FILES := ARCamera.cpp QCARBase.cpp SampleUtils.cpp SampleMath.cpp Texture.cpp Model.cpp
 
 # By default, ARM target binaries will be generated in 'thumb' mode, where
 # each instruction are 16-bit wide. You can define this variable to 'arm'

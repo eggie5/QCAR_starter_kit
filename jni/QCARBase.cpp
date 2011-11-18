@@ -20,6 +20,7 @@
 #include "Texture.h"
 #include "Shaders.h"
 #include "Obj_lexus.h"
+#include "Model.h"
 
 
 
@@ -28,6 +29,9 @@ extern "C"
 {
 #endif
 
+// Models:
+int model_count  = 0;
+Model** models  = 0;
 
 // Textures:
 int texture_count  = 0;
@@ -128,6 +132,52 @@ Java_com_eggie5_AR_ARCamera_initApplicationNative(
     // Handle to the activity class:
     jclass activityClass = env->GetObjectClass(obj);
 
+	//load models
+	jmethodID getModelCountMethodID = env->GetMethodID(activityClass,
+	                                                "getModelCount", "()I");
+	if (getModelCountMethodID == 0)
+	{
+	    LOG("Function getModelCount() not found.");
+	    return;
+	}
+
+	model_count = env->CallIntMethod(obj, getModelCountMethodID);    
+	if (!model_count)
+	{
+	    LOG("getModelCount() returned zero.");
+	    return;
+	}
+
+	models = new Model*[model_count];
+
+	//load model from java layer
+     jmethodID getModelMethodID = env->GetMethodID(activityClass,  "getModel", "(I)Lcom/eggie5/AR/Model;");
+
+     if (getModelMethodID == 0)
+     {
+         LOG("Function getModel() not found.");
+         return;
+     }
+
+	 for (int i = 0; i < model_count; ++i)
+	    {
+
+	        //call to get texture in javacode
+	        jobject modelObject = env->CallObjectMethod(obj, getModelMethodID, i); 
+	        if (modelObject == NULL)
+	        {
+	            LOG("GetModel() returned zero pointer");
+	            return;
+	        }
+
+	       models[i]= Model::create(env, modelObject);
+	    }
+
+     
+
+//--------------
+
+	//load textures
     jmethodID getTextureCountMethodID = env->GetMethodID(activityClass,
                                                     "getTextureCount", "()I");
     if (getTextureCountMethodID == 0)
@@ -195,8 +245,7 @@ Java_com_eggie5_AR_ARCamera_deinitApplicationNative(
 
 
 JNIEXPORT void JNICALL
-Java_com_eggie5_AR_ARCamera_startCamera(JNIEnv *,
-                                                                         jobject)
+Java_com_eggie5_AR_ARCamera_startCamera(JNIEnv *,  jobject)
 {
     LOG("Java_com_eggie5_AR_ARCamera_startCamera");
 
@@ -278,21 +327,26 @@ LOG("**************************_____");
     glClearColor(0.0f, 0.0f, 0.0f, QCAR::requiresAlpha() ? 0.0f : 1.0f);
 
 	//VBO setup
+	int _len=(models[0]->num_of_verts*3)*4;
+	LOG("*** model len=%d", _len);
+
 	glGenBuffers(2, vbo);
 	
     glBindBuffer (GL_ARRAY_BUFFER, vbo[0]);
-	//size of arry * 4 (bytes in a float)
-    glBufferData (GL_ARRAY_BUFFER, (3*Obj_LexusNumVerts)*4, Obj_LexusVerts, GL_STATIC_DRAW);
 
+	//size of arry * 4 (bytes in a float)
+    glBufferData (GL_ARRAY_BUFFER, _len, models[0]->vertices, GL_STATIC_DRAW);
+LOG("*** AFTER VBO SETUP CODE****");
 	glBindBuffer (GL_ARRAY_BUFFER, vbo[1]);
 	//size of arry * 4 (bytes in a float)
-    glBufferData (GL_ARRAY_BUFFER, (2*Obj_LexusNumVerts)*4, Obj_LexusTexCoords, GL_STATIC_DRAW);
+    glBufferData (GL_ARRAY_BUFFER, (models[0]->num_of_verts*2)*4, models[0]->texture_coords, GL_STATIC_DRAW);
     // glBindBuffer (GL_ELEMENT_ARRAY_BUFFER, vbo[1]);
     //     glBufferData (GL_ELEMENT_ARRAY_BUFFER, 2*4, indices, GL_STATIC_DRAW);
 
 	// delete Obj_LexusVerts;
 	// 	 delete Obj_LexusTexCoords;
     
+
     // Now generate the OpenGL texture objects and add settings
     for (int i = 0; i < texture_count; ++i)
     {
@@ -311,7 +365,8 @@ LOG("**************************_____");
                 textures[i]->mHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE,
                 (GLvoid*)  textures[i]->mData);
     }
-
+	
+	
   
     //compile shader
     shader_program_id     = SampleUtils::createProgramFromBuffer(vertex_shader_literal,  fragment_shader_literal);
@@ -324,7 +379,7 @@ LOG("**************************_____");
     mvp_matrix_handle     = glGetUniformLocation(shader_program_id,    "modelViewProjectionMatrix");
 
 
-
+	
 }
 
 
