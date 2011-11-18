@@ -262,7 +262,7 @@ public class ARCamera extends Activity
 
     private void loadModels()
     {
-        mModels.add(Model.loadModelFromApk("panda_model.json.png", getAssets()));
+        mModels.add(Model.loadModelFromApk("Obj_Lexus.json.png", getAssets()));
     }
     
     
