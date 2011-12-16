@@ -19,8 +19,6 @@ uniform mat4 modelViewProjectionMatrix; \
 void main() \
 { \
    gl_Position = modelViewProjectionMatrix * vertexPosition; \
-   normal = vertexNormal; \
-   texCoord = vertexTexCoord; \
 } \
 ";
 
@@ -36,7 +34,7 @@ uniform sampler2D texSampler2D; \
  \
 void main() \
 { \
-   gl_FragColor = texture2D(texSampler2D, texCoord); \
+   gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0); \
 } \
 ";
 

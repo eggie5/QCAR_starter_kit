@@ -273,14 +273,12 @@ Java_com_eggie5_AR_ARCamera_startCamera(JNIEnv *,  jobject)
     const QCAR::Tracker& tracker = QCAR::Tracker::getInstance();
     const QCAR::CameraCalibration& cameraCalibration =
                                     tracker.getCameraCalibration();
-    projection_matrix = QCAR::Tool::getProjectionGL(cameraCalibration, 2.0f,
-                                            2000.0f);
+    projection_matrix = QCAR::Tool::getProjectionGL(cameraCalibration, 2.0f,  5000.0f);
 }
 
 
 JNIEXPORT void JNICALL
-Java_com_eggie5_AR_ARCamera_stopCamera(JNIEnv *,
-                                                                   jobject)
+Java_com_eggie5_AR_ARCamera_stopCamera(JNIEnv *, jobject)
 {
     LOG("Java_com_eggie5_AR_ARCamera_stopCamera");
 
@@ -326,26 +324,28 @@ LOG("**************************_____");
     // Define clear color
     glClearColor(0.0f, 0.0f, 0.0f, QCAR::requiresAlpha() ? 0.0f : 1.0f);
 
-	//VBO setup
-	int _len=(models[0]->num_of_verts*3)*4;
-	LOG("*** model len=%d", _len);
+	if(model_count>0)
+	{
+		//VBO setup
+		int _len=(models[0]->num_of_verts*3)*4;
+		LOG("*** model len=%d", _len);
 
-	glGenBuffers(2, vbo);
+		glGenBuffers(2, vbo);
 	
-    glBindBuffer (GL_ARRAY_BUFFER, vbo[0]);
+	    glBindBuffer (GL_ARRAY_BUFFER, vbo[0]);
 
-	//size of arry * 4 (bytes in a float)
-    glBufferData (GL_ARRAY_BUFFER, _len, models[0]->vertices, GL_STATIC_DRAW);
-LOG("*** AFTER VBO SETUP CODE****");
-	glBindBuffer (GL_ARRAY_BUFFER, vbo[1]);
-	//size of arry * 4 (bytes in a float)
-    glBufferData (GL_ARRAY_BUFFER, (models[0]->num_of_verts*2)*4, models[0]->texture_coords, GL_STATIC_DRAW);
-    // glBindBuffer (GL_ELEMENT_ARRAY_BUFFER, vbo[1]);
-    //     glBufferData (GL_ELEMENT_ARRAY_BUFFER, 2*4, indices, GL_STATIC_DRAW);
+		//size of arry * 4 (bytes in a float)
+	    glBufferData (GL_ARRAY_BUFFER, _len, models[0]->vertices, GL_STATIC_DRAW);
+		LOG("*** AFTER VBO SETUP CODE****");
+		glBindBuffer (GL_ARRAY_BUFFER, vbo[1]);
+		//size of arry * 4 (bytes in a float)
+	    glBufferData (GL_ARRAY_BUFFER, (models[0]->num_of_verts*2)*4, models[0]->texture_coords, GL_STATIC_DRAW);
+	    // glBindBuffer (GL_ELEMENT_ARRAY_BUFFER, vbo[1]);
+	    //     glBufferData (GL_ELEMENT_ARRAY_BUFFER, 2*4, indices, GL_STATIC_DRAW);
 
-	// delete Obj_LexusVerts;
-	// 	 delete Obj_LexusTexCoords;
-    
+		// delete Obj_LexusVerts;
+		// 	 delete Obj_LexusTexCoords;
+	}
 
     // Now generate the OpenGL texture objects and add settings
     for (int i = 0; i < texture_count; ++i)

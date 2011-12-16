@@ -14,6 +14,7 @@
 #include <QCAR/Trackable.h>
 #include <QCAR/Tool.h>
 #include <QCAR/Tracker.h>
+#include <QCAR/ImageTarget.h>
 #include <QCAR/CameraCalibration.h>
 
 #include "SampleUtils.h"

@@ -257,12 +257,12 @@ public class ARCamera extends Activity
     {
        // mTextures.add(Texture.loadTextureFromApk("TextureTeapotBrass.png",  getAssets()));
         //mTextures.add(Texture.loadTextureFromApk("TextureTeapotBlue.png",  getAssets()));
-        mTextures.add(Texture.loadTextureFromApk("lexus_texture.jpg", getAssets()));
+       mTextures.add(Texture.loadTextureFromApk("lexus_texture.jpg", getAssets()));
     }
 
     private void loadModels()
     {
-        mModels.add(Model.loadModelFromApk("Obj_Lexus.json.png", getAssets()));
+        //mModels.add(Model.loadModelFromApk("Obj_Lexus.json.png", getAssets()));
     }
     
     
