@@ -20,7 +20,7 @@ SampleUtils::printMatrix(const float* mat)
 
 void
 SampleUtils::checkGlError(const char* operation)
-{ 
+{
     for (GLint error = glGetError(); error; error = glGetError())
         LOG("after %s() glError (0x%x)", operation, error);
 }
@@ -34,16 +34,16 @@ SampleUtils::translatePoseMatrix(float x, float y, float z, float* matrix)
         return;
 
     // matrix * translate_matrix
-    matrix[12] += 
+    matrix[12] +=
         (matrix[0] * x + matrix[4] * y + matrix[8]  * z);
-        
-    matrix[13] += 
+
+    matrix[13] +=
         (matrix[1] * x + matrix[5] * y + matrix[9]  * z);
-        
-    matrix[14] += 
+
+    matrix[14] +=
         (matrix[2] * x + matrix[6] * y + matrix[10] * z);
-        
-    matrix[15] += 
+
+    matrix[15] +=
         (matrix[3] * x + matrix[7] * y + matrix[11] * z);
 }
 
@@ -58,7 +58,7 @@ SampleUtils::rotatePoseMatrix(float angle, float x, float y, float z,
 
     float rotate_matrix[16];
     SampleUtils::setRotationMatrix(angle, x, y, z, rotate_matrix);
-        
+
     // matrix * scale_matrix
     SampleUtils::multiplyMatrix(matrix, rotate_matrix, matrix);
 }
@@ -76,12 +76,12 @@ SampleUtils::scalePoseMatrix(float x, float y, float z, float* matrix)
     matrix[1]  *= x;
     matrix[2]  *= x;
     matrix[3]  *= x;
-                     
+
     matrix[4]  *= y;
     matrix[5]  *= y;
     matrix[6]  *= y;
     matrix[7]  *= y;
-                     
+
     matrix[8]  *= z;
     matrix[9]  *= z;
     matrix[10] *= z;
@@ -112,8 +112,8 @@ SampleUtils::multiplyMatrix(float *matrixA, float *matrixB, float *matrixC)
 
 
 void
-SampleUtils::setRotationMatrix(float angle, float x, float y, float z, 
-    float *matrix)
+SampleUtils::setRotationMatrix(float angle, float x, float y, float z,
+                               float *matrix)
 {
     double radians, c, s, c1, u[3], length;
     int i, j;
@@ -153,7 +153,7 @@ SampleUtils::setRotationMatrix(float angle, float x, float y, float z,
 unsigned int
 SampleUtils::initShader(unsigned int shaderType, const char* source)
 {
-#ifdef USE_OPENGL_ES_2_0    
+#ifdef USE_OPENGL_ES_2_0
     GLuint shader = glCreateShader((GLenum)shaderType);
     if (shader)
     {
@@ -161,7 +161,7 @@ SampleUtils::initShader(unsigned int shaderType, const char* source)
         glCompileShader(shader);
         GLint compiled = 0;
         glGetShaderiv(shader, GL_COMPILE_STATUS, &compiled);
-    
+
         if (!compiled)
         {
             GLint infoLen = 0;
@@ -172,7 +172,7 @@ SampleUtils::initShader(unsigned int shaderType, const char* source)
                 if (buf)
                 {
                     glGetShaderInfoLog(shader, infoLen, NULL, buf);
-                    LOG("Could not compile shader %d: %s", 
+                    LOG("Could not compile shader %d: %s",
                         shaderType, buf);
                     free(buf);
                 }
@@ -192,14 +192,14 @@ unsigned int
 SampleUtils::createProgramFromBuffer(const char* vertexShaderBuffer,
                                      const char* fragmentShaderBuffer)
 {
-#ifdef USE_OPENGL_ES_2_0    
+#ifdef USE_OPENGL_ES_2_0
 
     GLuint vertexShader = initShader(GL_VERTEX_SHADER, vertexShaderBuffer);
     if (!vertexShader)
-        return 0;    
+        return 0;
 
     GLuint fragmentShader = initShader(GL_FRAGMENT_SHADER,
-                                        fragmentShaderBuffer);
+                                       fragmentShaderBuffer);
     if (!fragmentShader)
         return 0;
 
@@ -208,14 +208,14 @@ SampleUtils::createProgramFromBuffer(const char* vertexShaderBuffer,
     {
         glAttachShader(program, vertexShader);
         checkGlError("glAttachShader");
-        
+
         glAttachShader(program, fragmentShader);
         checkGlError("glAttachShader");
-        
+
         glLinkProgram(program);
         GLint linkStatus = GL_FALSE;
         glGetProgramiv(program, GL_LINK_STATUS, &linkStatus);
-        
+
         if (linkStatus != GL_TRUE)
         {
             GLint bufLength = 0;

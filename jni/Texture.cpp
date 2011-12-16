@@ -7,11 +7,11 @@
 #include <string.h>
 
 Texture::Texture() :
-mWidth(0),
-mHeight(0),
-mChannelCount(0),
-mData(0),
-mTextureID(0)
+    mWidth(0),
+    mHeight(0),
+    mChannelCount(0),
+    mData(0),
+    mTextureID(0)
 {}
 
 
@@ -59,10 +59,10 @@ Texture::create(JNIEnv* env, jobject textureObject)
         LOG("Function GetTextureBuffer() not found.");
         return 0;
     }
-    
-    
+
+
     //get texture bytes from Java Texture.getData
-    jbyteArray pixelBuffer = (jbyteArray)env->CallObjectMethod(textureObject, texBufferMethodId);    
+    jbyteArray pixelBuffer = (jbyteArray)env->CallObjectMethod(textureObject, texBufferMethodId);
     if (pixelBuffer == NULL)
     {
         LOG("Get image buffer returned zero pointer");
@@ -89,7 +89,7 @@ Texture::create(JNIEnv* env, jobject textureObject)
 
     // Release:
     env->ReleaseByteArrayElements(pixelBuffer, pixels, 0);
-    
+
     return newTexture;
 }
 

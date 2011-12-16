@@ -134,7 +134,7 @@ Model::create(JNIEnv* env, jobject ModelObject)
     // Release:
     // informs the VM that the native code no longer needs access to vertices ref
     env->ReleaseFloatArrayElements(texture_coordBuffer, texture_coords, 0);
-	////////// end texture_coords
+    ////////// end texture_coords
 
 
     return newModel;
